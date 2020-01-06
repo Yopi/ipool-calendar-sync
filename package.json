@@ -1,8 +1,8 @@
 {
 	"dependencies": {
 		"dateformat": "^3.0.3",
-		"google-calendar": "^1.3.2",
 		"gtoken": "^4.1.3",
+		"needle": "^2.4.0",
 		"puppeteer": "^2.0.0"
 	}
 }

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const gcal = require('google-calendar')
+const gcal = require('./GoogleCalendar')
 const CONFIG = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
 const { GoogleToken } = require('gtoken');
