@@ -61,7 +61,7 @@ function parseSchedule(scheduleResponse) {
 
 (async () => {
   const fromDate = dateFormat(new Date(new Date().setHours(0)), "yyyy-mm-dd HH:MM:ss");
-  const toDate = dateFormat(new Date(new Date().setMonth(new Date().getMonth() + 1)), "yyyy-mm-dd HH:MM:ss");
+  const toDate = dateFormat(new Date(new Date().setMonth(new Date().getMonth() + 3)), "yyyy-mm-dd HH:MM:ss");
   const schedule = await getSchedule(CONFIG.USERNAME, CONFIG.PASSWORD, fromDate, toDate)
   const token = await getToken();
   var events = [];
@@ -71,12 +71,28 @@ function parseSchedule(scheduleResponse) {
     console.log(err);
   }
 
-  eventsToAdd = parseSchedule(schedule);
-  eventsToDelete = events.filter((e, i) => {
+  var eventsToAdd = parseSchedule(schedule);
+  var eventsToDelete = events.filter((e, i) => {
     return (e.description && e.description.match(/script/i));
-  }).map((e, i) => {
-    return e['id'];
   });
+
+
+  // Make filtering of new / old events a bit smarter
+  var eventsToAddIDs = eventsToAdd.map((e) => e.description.match(/ID: (.+) \(Tillagd av script\)/i)[1])
+  var eventsToDeleteIDs = eventsToDelete.map((e) => e.description.match(/ID: (.+) \(Tillagd av script\)/i)[1])
+
+  var actualEventsToAddIDs = eventsToAddIDs.filter((id) => !eventsToDeleteIDs.includes(id));
+  var actualEventsToDeleteIDs = eventsToDeleteIDs.filter((id) => !eventsToAddIDs.includes(id));
+
+  eventsToAdd = eventsToAdd.filter((e) => {
+    return actualEventsToAddIDs.includes(e.description.match(/ID: (.+) \(Tillagd av script\)/i)[1]);
+  });
+
+  eventsToDelete = eventsToDelete.filter((e) => {
+    return actualEventsToDeleteIDs.includes(e.description.match(/ID: (.+) \(Tillagd av script\)/i)[1]);
+  });
+
+
 
   console.log(`Tar bort ${eventsToDelete.length} arbetspass`);
   try {

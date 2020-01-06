@@ -18,7 +18,7 @@ async function listEvents(token) {
     gcal(token).events.list(CONFIG.CALENDAR_ID, {
       orderBy: 'startTime',
       timeMin: (new Date(new Date().setHours(0))).toISOString(),
-      timeMax: (new Date(new Date().setMonth(new Date().getMonth() + 1))).toISOString(),
+      timeMax: (new Date(new Date().setMonth(new Date().getMonth() + 3))).toISOString(),
       singleEvents: true
     }, function(err, data) {
       if(err) reject(err);
