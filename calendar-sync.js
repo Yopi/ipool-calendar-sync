@@ -97,7 +97,7 @@ function parseSchedule(scheduleResponse) {
   console.log(`Tar bort ${eventsToDelete.length} arbetspass`);
   try {
     for(var i = 0; i < eventsToDelete.length; i++) {
-      await removeEvent(token['access_token'], eventsToDelete[i]);
+      await removeEvent(token['access_token'], eventsToDelete[i].id);
     }
   } catch(err) {
     console.log("Kunde inte ta bort arbetspass");
